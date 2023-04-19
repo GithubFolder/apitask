@@ -4,4 +4,6 @@ export class SERVICE_URL {
   
 
 static fetchData = this.internal_url + '/fetch-existing-loans';
+static addData = this.internal_url + '/add-exist-loan';
+static Delete = this.internal_url + '/delete-exist-loan';
 }

@@ -12,9 +12,10 @@ import { Input } from '@progress/kendo-react-inputs';
 import { useSelector,useDispatch } from 'react-redux';
 import { fetchData } from './redux/FetchSlice';
 
+import {AddDataThunkApi,DeleteThunkApi, GetThunkApi,UpdateThunkApi} from './reduxThunkApi/FetchService';
 
 
-// import  {FetchDataThunkApi} from './reduxThunkApi/FetchService';
+// import {FetchDataThunkApi} from './reduxThunkApi/FetchService';
 
 
 
@@ -24,22 +25,24 @@ function App() {
   console.log(data);
 
   const [item,setItem] = useState({
-    institutionName:"",
+    nameOfInstitution:"",
     loanamount:"",
     principleamount:"",
     emiamount:"",
   });
 
-  const handleClick = (e) => {
-    setItem(e.target.values);
-    // alert(JSON.stringify(data));
-  }
+  const [isedit,setIsEdit] = useState(false);
 
+  const changeHandler = (e) => {
+    setItem({...item,[(e).target.name]: (e).target.value})
+ }
+
+  
   useEffect (() => {
-    // var raw = JSON.stringify({
       var raw = JSON.stringify({
-        "applicantId": 2,
-        "internalApplicationId": 2,
+      
+        "applicantId": 17,
+        "internalApplicationId": 17,
         "customerId": null
     });
     
@@ -53,6 +56,72 @@ function App() {
     dispatch(fetchData(requestOptions));
     // dispatch(FetchDataThunkApi(requestOptions));
   },[]);
+
+  const addData = () => {
+    if (item?.loanId){
+   dispatch(UpdateThunkApi
+    ({
+    userId: "Trainee",
+    loanId: item.loanId,
+    nameOfInstitution: item.nameOfInstitution,
+    applicantId: 17,
+    internalApplicationId: 17,
+    "customerId":null,
+    "loanAmount": item.loanamount,
+    "principalOutstandingAmount": item.principleamount,
+    "emiAmount": item.emiamount
+   })
+   )
+    }else{
+      dispatch(
+        AddDataThunkApi({
+        internalApplicationId: 17,
+        applicantId: 17,
+        customerId:null,
+        userId: "Trainee",
+        nameOfInstitution: item.nameOfInstitution,
+        loanAmount: parseInt(item.loanamount),
+        principalOutstandingAmount: parseInt(item.principleamount),
+        emiAmount: parseInt(item.emiamount),
+      }),
+      )
+    }
+    console.log(dispatch);
+  }
+
+  const deleteData = (props) =>{
+    dispatch(
+      DeleteThunkApi({
+       "userId": "Trainee",
+       "applicantId": 17,
+       "internalApplicationId": 17,
+       "customerId": "",
+       "loanId": props.dataItem.loanId
+
+      })
+    )
+    console.log(dispatch);
+  }
+  
+
+
+  const updateData = (props) => {
+    setIsEdit(true);
+    console.log(props.dataItem);
+    setItem({...item,
+      nameOfInstitution:props.dataItem.nameOfInstitution,
+      loanamount:props.dataItem.loanAmount, 
+      principleamount:props.dataItem.principalOutstandingAmount,
+      emiamount:props.dataItem.emiAmount,
+      loanId:props.dataItem.loanId
+
+    })
+  }
+
+  console.log(item);
+
+
+
   return (
     <div>
 
@@ -60,24 +129,28 @@ function App() {
         render={formRenderProps => (
           <FormElement>
               <div style={{width:"500px",paddingTop:"20px"}}>
-                <Label for = "institutionName">Name of the Institution</Label>
+                <Label for = "nameOfInstitution">Name of the Institution</Label>
                 <Input
-                  name="institutionName"
-                  onChange={(e) => setItem(e.target.value)}
+                  name="nameOfInstitution"
+                  onChange={ changeHandler}
+                  value={item.nameOfInstitution}
                 />
               </div>
               <div  style={{width:"500px",paddingTop:"20px"}}>
                  <Label for = "loanamount">Loan Amount</Label>
                 <Input
                 name='loanamount'
-                onChange={(e) => setItem(e.target.value)}
+                value={item.loanamount}
+                onChange={ changeHandler}
                 />
               </div>
               <div  style={{width:"500px",paddingTop:"20px"}}>
                 <Label for = "principleamount">Principle Amount Outstanding</Label>
                 <Input
+                 value={item.principleamount}
                 name='principleamount'
-                onChange={(e) => setItem(e.target.value)}
+                onChange={changeHandler}
+                // {(item.principleamount)}
                 />
               </div>
 
@@ -85,15 +158,18 @@ function App() {
             <div  style={{width:"500px",paddingTop:"20px",paddingBottom:'20px'}}>
               <Label for = "emiamount">EMI Amount</Label>
                 <Input
+                value={item.emiamount}
                 name='emiamount'
-                onChange={(e) => setItem(e.target.value)}
+                onChange={ changeHandler}
+                // {(item.emiamount)}
                 />
               </div> 
 
               <div>
-                <Button onClick={handleClick}>
-                  ADD
-                </Button>
+               
+                   <Button onClick={addData}>
+                     {isedit == true?"Edit":"add"}
+                   </Button>
               </div>
            
 
@@ -128,13 +204,14 @@ function App() {
                     <FiEdit3
                       className="editButton"
                       style={{ fontSize: '18px' }}
-                      onClick={() => {
-                      }}
+                     
+                      onClick={() => updateData(props)}
                     />
                     &nbsp; &nbsp;
                     <FiTrash2
                       className="deleteButton"
                       style={{ fontSize: '18px' }}
+                      onClick={() => deleteData(props)}
                     />
                   </td>
                 )}
