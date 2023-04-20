@@ -106,6 +106,15 @@ function App() {
 
 
   const updateData = (props) => {
+
+   dispatch(GetThunkApi({
+      "applicantId": 17,
+      "internalApplicationId": 17,
+      "customerId": "",
+      // "loanId": 283
+      "loanId":  props.dataItem.loanId
+   }))
+
     setIsEdit(true);
     console.log(props.dataItem);
     setItem({...item,
@@ -116,6 +125,7 @@ function App() {
       loanId:props.dataItem.loanId
 
     })
+
   }
 
   console.log(item);
@@ -147,7 +157,7 @@ function App() {
               <div  style={{width:"500px",paddingTop:"20px"}}>
                 <Label for = "principleamount">Principle Amount Outstanding</Label>
                 <Input
-                 value={item.principleamount}
+                value={item.principleamount}
                 name='principleamount'
                 onChange={changeHandler}
                 // {(item.principleamount)}
