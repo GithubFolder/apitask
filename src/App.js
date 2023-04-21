@@ -40,7 +40,6 @@ function App() {
   
   useEffect (() => {
       var raw = JSON.stringify({
-      
         "applicantId": 17,
         "internalApplicationId": 17,
         "customerId": null
@@ -57,26 +56,41 @@ function App() {
     // dispatch(FetchDataThunkApi(requestOptions));
   },[]);
 
-  const addData = () => {
+  const addData = async () => {
+    // const addData = () => {
     if (item?.loanId){
-   dispatch(UpdateThunkApi
+    // dispatch(UpdateThunkApi
+   const response = await dispatch(UpdateThunkApi
     ({
     userId: "Trainee",
     loanId: item.loanId,
     nameOfInstitution: item.nameOfInstitution,
     applicantId: 17,
-    internalApplicationId: 17,
-    "customerId":null,
-    "loanAmount": item.loanamount,
-    "principalOutstandingAmount": item.principleamount,
-    "emiAmount": item.emiamount
+    internalApplicationId:  17,
+    customerId:null,
+    // loanAmount:item.loanamount,
+    loanAmount: parseInt(item.loanamount),
+    principalOutstandingAmount: item.principleamount,
+    emiAmount: item.emiamount
    })
    )
+   console.log(response);
+   if(response.payload.data.status){
+    dispatch(GetThunkApi({
+        "applicantId": 17,
+        "internalApplicationId": 17,
+        "customerId": null,
+        // "loanId": 283
+        "loanId":item.loanId
+     }))
+    }
+  
+
     }else{
       dispatch(
         AddDataThunkApi({
-        internalApplicationId: 17,
-        applicantId: 17,
+        internalApplicationId:  17,
+        applicantId:  17,
         customerId:null,
         userId: "Trainee",
         nameOfInstitution: item.nameOfInstitution,
@@ -93,8 +107,8 @@ function App() {
     dispatch(
       DeleteThunkApi({
        "userId": "Trainee",
-       "applicantId": 17,
-       "internalApplicationId": 17,
+       "applicantId":  17,
+       "internalApplicationId":17,
        "customerId": "",
        "loanId": props.dataItem.loanId
 
@@ -107,18 +121,11 @@ function App() {
 
   const updateData = (props) => {
 
-   dispatch(GetThunkApi({
-      "applicantId": 17,
-      "internalApplicationId": 17,
-      "customerId": "",
-      // "loanId": 283
-      "loanId":  props.dataItem.loanId
-   }))
-
     setIsEdit(true);
     console.log(props.dataItem);
     setItem({...item,
       nameOfInstitution:props.dataItem.nameOfInstitution,
+      // loanamount:parseInt(props.dataItem.loanAmount), 
       loanamount:props.dataItem.loanAmount, 
       principleamount:props.dataItem.principalOutstandingAmount,
       emiamount:props.dataItem.emiAmount,
@@ -128,7 +135,7 @@ function App() {
 
   }
 
-  console.log(item);
+  // console.log(item);
 
 
 
@@ -214,7 +221,6 @@ function App() {
                     <FiEdit3
                       className="editButton"
                       style={{ fontSize: '18px' }}
-                     
                       onClick={() => updateData(props)}
                     />
                     &nbsp; &nbsp;

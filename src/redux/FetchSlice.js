@@ -68,8 +68,7 @@ const fetchSlice = createSlice({
             [ GetThunkApi.fulfilled]:(state,action) => {
                 console.log(action);
                 state.loading = false;
-                state.data = action.payload.data;
-    
+                // state.data = action.payload.data;
             },
             [GetThunkApi.rejected]:(state,action) => {
                 state.loading = false;
