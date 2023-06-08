@@ -10,9 +10,9 @@ import { FiTrash2, FiEdit3 } from 'react-icons/fi';
 import { Input } from '@progress/kendo-react-inputs';
 
 import { useSelector,useDispatch } from 'react-redux';
-import { fetchData } from './redux/FetchSlice';
+// import { fetchData } from './redux/FetchSlice';
 
-import {AddDataThunkApi,DeleteThunkApi, GetThunkApi,UpdateThunkApi} from './reduxThunkApi/FetchService';
+import {FetchDataThunkApi,AddDataThunkApi,DeleteThunkApi, GetThunkApi,UpdateThunkApi} from './reduxThunkApi/FetchService';
 
 
 // import {FetchDataThunkApi} from './reduxThunkApi/FetchService';
@@ -38,23 +38,35 @@ function App() {
  }
 
   
-  useEffect (() => {
-      var raw = JSON.stringify({
-        "applicantId": 17,
-        "internalApplicationId": 17,
-        "customerId": null
-    });
+  // useEffect (() => {
+  //     var raw = JSON.stringify({
+  //       "applicantId": 17,
+  //       "internalApplicationId": 17,
+  //       "customerId": null
+  //   });
     
-    var requestOptions = {
-      method: 'POST',
-      headers: {
-          "Content-Type":"application/json"
-      },
-      body: raw,
-    };
-    dispatch(fetchData(requestOptions));
-    // dispatch(FetchDataThunkApi(requestOptions));
+  //   var requestOptions = {
+  //     method: 'POST',
+  //     headers: {
+  //         "Content-Type":"application/json"
+  //     },
+  //     body: raw,
+  //   };
+  //   dispatch(fetchData(requestOptions));
+  //   // dispatch(FetchDataThunkApi(requestOptions));
+  // },[]);
+
+
+
+   useEffect ( () => {
+    dispatch(FetchDataThunkApi({
+   applicantId: 17,
+   internalApplicationId: 17,
+   customerId: null
+    }))
   },[]);
+
+  
 
   const addData = async () => {
     // const addData = () => {
@@ -84,7 +96,6 @@ function App() {
         "loanId":item.loanId
      }))
     }
-  
 
     }else{
       dispatch(
@@ -146,7 +157,7 @@ function App() {
         render={formRenderProps => (
           <FormElement>
               <div style={{width:"500px",paddingTop:"20px"}}>
-                <Label for = "nameOfInstitution">Name of the Institution</Label>
+                <Label htmlFor = "nameOfInstitution">Name of the Institution</Label>
                 <Input
                   name="nameOfInstitution"
                   onChange={ changeHandler}
@@ -154,7 +165,7 @@ function App() {
                 />
               </div>
               <div  style={{width:"500px",paddingTop:"20px"}}>
-                 <Label for = "loanamount">Loan Amount</Label>
+                 <Label htmlFor = "loanamount">Loan Amount</Label>
                 <Input
                 name='loanamount'
                 value={item.loanamount}
@@ -162,7 +173,7 @@ function App() {
                 />
               </div>
               <div  style={{width:"500px",paddingTop:"20px"}}>
-                <Label for = "principleamount">Principle Amount Outstanding</Label>
+                <Label htmlFor = "principleamount">Principle Amount Outstanding</Label>
                 <Input
                 value={item.principleamount}
                 name='principleamount'
@@ -173,7 +184,7 @@ function App() {
 
             
             <div  style={{width:"500px",paddingTop:"20px",paddingBottom:'20px'}}>
-              <Label for = "emiamount">EMI Amount</Label>
+              <Label htmlFor = "emiamount">EMI Amount</Label>
                 <Input
                 value={item.emiamount}
                 name='emiamount'
